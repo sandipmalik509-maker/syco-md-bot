@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SYCO MD BOT</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090d12;color:#fff;
+ font-family:Arial,sans-serif;padding:20px
+}
+header{
+ padding:22px;background:#111b20;
+ border:1px solid #263b36;border-radius:18px;
+ margin-bottom:20px
+}
+h1{color:#39e69b;margin:0;font-size:27px}
+p{color:#9daeb0}
+.card{
+ background:#111a20;border:1px solid #263b36;
+ border-radius:15px;padding:18px;margin-bottom:15px
+}
+.status{color:#ffb45c;font-weight:bold}
+button{
+ background:#19c985;color:#04120c;
+ border:0;padding:12px 18px;border-radius:9px;
+ font-weight:bold;cursor:pointer
+}
+button:disabled{opacity:.5}
+.grid{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:12px
+}
+.item{background:#1a272b;padding:15px;border-radius:10px}
+.small{font-size:13px;color:#9daeb0}
+footer{text-align:center;color:#71827f;margin-top:25px}
+</style>
+</head>
+<body>
+
+<header>
+ <p>⚡ OFFICIAL BOT DASHBOARD</p>
+ <h1>SYCO MD BOT</h1>
+ <p>ALL-IN-ONE WHATSAPP MANAGEMENT</p>
+ <span class="status" id="status">● DEMO MODE</span>
+</header>
+
+<div class="card">
+ <h3>Bot Overview</h3>
+ <div class="grid">
+  <div class="item">
+   <div class="small">BOT STATUS</div>
+   <h3 id="botStatus">OFFLINE</h3>
+  </div>
+  <div class="item">
+   <div class="small">VERSION</div>
+   <h3>1.0.0</h3>
+  </div>
+ </div>
+ <br>
+ <button onclick="toggleBot()">Toggle Demo Status</button>
+</div>
+
+<div class="card">
+ <h3>Bot Features</h3>
+ <div class="grid">
+  <div class="item">🤖 AI Chat</div>
+  <div class="item">👋 Welcome</div>
+  <div class="item">🛡️ Anti Spam</div>
+  <div class="item">🌐 Translate</div>
+  <div class="item">📊 Group Info</div>
+  <div class="item">⚙️ Admin Tools</div>
+ </div>
+</div>
+
+<div class="card">
+ <h3>Available Commands</h3>
+ <p>.menu</p>
+ <p>.help</p>
+ <p>.ping</p>
+ <p>.alive</p>
+ <p>.groupinfo</p>
+ <p>.ai</p>
+</div>
+
+<div class="card">
+ <h3>System Information</h3>
+ <p>Project: SYCO MD BOT</p>
+ <p>Platform: WhatsApp Cloud API</p>
+ <p>Dashboard: Active Demo</p>
+ <p class="small">Real bot connection is not configured yet.</p>
+</div>
+
+<footer>
+ POWERED BY SYCO<br>
+ © 2026 SYCO MD BOT
+</footer>
+
+<script>
+let online=false;
+function toggleBot(){
+ online=!online;
+ document.getElementById("botStatus").innerText=
+ online?"DEMO ONLINE":"OFFLINE";
+ document.getElementById("status").innerText=
+ online?"● DEMO MODE - ON":"● DEMO MODE";
+}
+</script>
+</body>
+</html>
