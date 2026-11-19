@@ -38,7 +38,12 @@ input{
 button{
  background:#58ffad;color:#07110c;border:0;
  padding:12px 16px;border-radius:9px;
- font-weight:bold;
+ font-weight:bold;margin:5px 3px;
+}
+#pingResult{
+ color:#58ffad;
+ white-space:pre-line;
+ margin-top:12px;
 }
 footer{text-align:center;color:#91ad9c;padding:25px}
 </style>
@@ -51,11 +56,14 @@ footer{text-align:center;color:#91ad9c;padding:25px}
 </header>
 
 <main>
+
 <div class="card">
 <h2>⚡ SERVER STATUS</h2>
 <p>Backend: <span id="backend">Checking...</span></p>
 <p>WhatsApp: <span id="whatsapp">Checking...</span></p>
 <button onclick="loadData()">REFRESH STATUS</button>
+<button onclick="testPing()">LIVE PING TEST</button>
+<p id="pingResult"></p>
 </div>
 
 <div class="card">
@@ -71,6 +79,7 @@ footer{text-align:center;color:#91ad9c;padding:25px}
 Owner approval required. Demo settings only.
 </p>
 </div>
+
 </main>
 
 <footer>
@@ -85,6 +94,7 @@ let adminSettings={};
 async function loadData(){
  try{
   const status=await fetch('/api/status').then(r=>r.json());
+
   document.getElementById('backend').innerHTML=
   status.backend==='ONLINE'
   ?'<span class="status">ONLINE ✓</span>':'OFFLINE';
@@ -111,6 +121,30 @@ async function loadData(){
  }
 }
 
+async function testPing(){
+ const result=document.getElementById('pingResult');
+ result.textContent='Testing...';
+
+ try{
+  const response=await fetch('/api/reply',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({command:'.ping'})
+  });
+
+  const data=await response.json();
+
+  if(!response.ok || !data.success){
+   throw new Error('Ping failed');
+  }
+
+  result.textContent=data.reply;
+
+ }catch(error){
+  result.textContent='Connection error. Please try again.';
+ }
+}
+
 function showCommands(){
  const q=document.getElementById('search').value.toLowerCase();
  const area=document.getElementById('commands');
@@ -120,6 +154,7 @@ function showCommands(){
   const matches=(cat.commands||[]).filter(c=>
    c.toLowerCase().includes(q)
   );
+
   if(!matches.length)return;
 
   const section=document.createElement('section');
