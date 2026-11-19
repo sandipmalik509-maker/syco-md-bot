@@ -1,0 +1,74 @@
+
+{
+  "bot": "SYCO MD BOT",
+  "version": "2.0.0",
+  "prefix": ".",
+  "categories": [
+    {
+      "name": "GROUP MANAGEMENT",
+      "commands": [
+        "kick", "add", "promote", "demote",
+        "mute", "unmute", "warn", "warnings",
+        "resetwarn", "tagall", "hidetag",
+        "groupinfo", "link", "revoke",
+        "open", "close", "setrules", "rules"
+      ]
+    },
+    {
+      "name": "AUTO ADMIN",
+      "commands": [
+        "autoadmin on",
+        "autoadmin off",
+        "adminlist",
+        "setadmin",
+        "deladmin",
+        "adminonly on",
+        "adminonly off"
+      ]
+    },
+    {
+      "name": "SECURITY",
+      "commands": [
+        "antilink", "antispam",
+        "welcome", "goodbye",
+        "filter", "unfilter"
+      ]
+    },
+    {
+      "name": "IMAGE & MEDIA",
+      "commands": [
+        "sticker", "toimg", "blur",
+        "enhance", "meme", "caption"
+      ]
+    },
+    {
+      "name": "FUN & GAMES",
+      "commands": [
+        "joke", "fact", "truth",
+        "dare", "ship", "quiz",
+        "riddle", "roll", "flip"
+      ]
+    },
+    {
+      "name": "SEARCH & TOOLS",
+      "commands": [
+        "weather", "translate", "wiki",
+        "calc", "qr", "shorturl", "time"
+      ]
+    },
+    {
+      "name": "BOT OWNER",
+      "commands": [
+        "menu", "ping", "owner",
+        "setprefix", "setname",
+        "restart", "status"
+      ]
+    }
+  ],
+  "autoAdmin": {
+    "enabled": false,
+    "promotionRequiresOwnerApproval": true,
+    "permissionRequiresOwnerApproval": true,
+    "neverPromoteWithoutConsent": true
+  }
+}
