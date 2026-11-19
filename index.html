@@ -3,110 +3,142 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SYCO MD BOT</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#090d12;color:#fff;
- font-family:Arial,sans-serif;padding:20px
+ margin:0;background:#050b08;color:#eafff2;
+ font-family:Arial,sans-serif;
 }
 header{
- padding:22px;background:#111b20;
- border:1px solid #263b36;border-radius:18px;
- margin-bottom:20px
+ padding:25px 18px;background:#0d1c14;
+ border-bottom:1px solid #24583b;
 }
-h1{color:#39e69b;margin:0;font-size:27px}
-p{color:#9daeb0}
+h1{color:#58ffad;margin:0}
+header p{color:#91ad9c;font-size:13px}
+main{max-width:850px;margin:auto;padding:18px}
 .card{
- background:#111a20;border:1px solid #263b36;
- border-radius:15px;padding:18px;margin-bottom:15px
+ background:#102019;border:1px solid #24583b;
+ border-radius:15px;padding:18px;margin-bottom:16px;
 }
-.status{color:#ffb45c;font-weight:bold}
+h2{color:#58ffad;font-size:19px}
+.status{color:#58ffad;font-weight:bold}
+.off{color:#ffbd55;font-weight:bold}
+input{
+ width:100%;padding:14px;border-radius:10px;
+ border:1px solid #397b55;background:#07110c;
+ color:white;font-size:16px;
+}
+.command{
+ display:inline-block;padding:9px 12px;margin:5px;
+ background:#193b2b;border-radius:8px;color:#baffd6;
+ font-size:13px;
+}
 button{
- background:#19c985;color:#04120c;
- border:0;padding:12px 18px;border-radius:9px;
- font-weight:bold;cursor:pointer
+ background:#58ffad;color:#07110c;border:0;
+ padding:12px 16px;border-radius:9px;
+ font-weight:bold;
 }
-button:disabled{opacity:.5}
-.grid{
- display:grid;grid-template-columns:1fr 1fr;
- gap:12px
-}
-.item{background:#1a272b;padding:15px;border-radius:10px}
-.small{font-size:13px;color:#9daeb0}
-footer{text-align:center;color:#71827f;margin-top:25px}
+footer{text-align:center;color:#91ad9c;padding:25px}
 </style>
 </head>
 <body>
 
 <header>
- <p>⚡ OFFICIAL BOT DASHBOARD</p>
- <h1>SYCO MD BOT</h1>
- <p>ALL-IN-ONE WHATSAPP MANAGEMENT</p>
- <span class="status" id="status">● DEMO MODE</span>
+<h1>🤖 SYCO MD BOT</h1>
+<p>ALL-IN-ONE WHATSAPP BOT • VERSION 2.0.0</p>
 </header>
 
+<main>
 <div class="card">
- <h3>Bot Overview</h3>
- <div class="grid">
-  <div class="item">
-   <div class="small">BOT STATUS</div>
-   <h3 id="botStatus">OFFLINE</h3>
-  </div>
-  <div class="item">
-   <div class="small">VERSION</div>
-   <h3>1.0.0</h3>
-  </div>
- </div>
- <br>
- <button onclick="toggleBot()">Toggle Demo Status</button>
+<h2>⚡ SERVER STATUS</h2>
+<p>Backend: <span id="backend">Checking...</span></p>
+<p>WhatsApp: <span id="whatsapp">Checking...</span></p>
+<button onclick="loadData()">REFRESH STATUS</button>
 </div>
 
 <div class="card">
- <h3>Bot Features</h3>
- <div class="grid">
-  <div class="item">🤖 AI Chat</div>
-  <div class="item">👋 Welcome</div>
-  <div class="item">🛡️ Anti Spam</div>
-  <div class="item">🌐 Translate</div>
-  <div class="item">📊 Group Info</div>
-  <div class="item">⚙️ Admin Tools</div>
- </div>
+<h2>📂 COMMAND MENU</h2>
+<input id="search" placeholder="Search commands..." oninput="showCommands()">
+<div id="commands">Loading...</div>
 </div>
 
 <div class="card">
- <h3>Available Commands</h3>
- <p>.menu</p>
- <p>.help</p>
- <p>.ping</p>
- <p>.alive</p>
- <p>.groupinfo</p>
- <p>.ai</p>
+<h2>👑 AUTO ADMIN</h2>
+<p id="admin">Loading...</p>
+<p style="color:#91ad9c;font-size:12px">
+Owner approval required. Demo settings only.
+</p>
 </div>
-
-<div class="card">
- <h3>System Information</h3>
- <p>Project: SYCO MD BOT</p>
- <p>Platform: WhatsApp Cloud API</p>
- <p>Dashboard: Active Demo</p>
- <p class="small">Real bot connection is not configured yet.</p>
-</div>
+</main>
 
 <footer>
- POWERED BY SYCO<br>
- © 2026 SYCO MD BOT
+POWERED BY SYCO ⚡<br>
+© 2026 SYCO MD BOT
 </footer>
 
 <script>
-let online=false;
-function toggleBot(){
- online=!online;
- document.getElementById("botStatus").innerText=
- online?"DEMO ONLINE":"OFFLINE";
- document.getElementById("status").innerText=
- online?"● DEMO MODE - ON":"● DEMO MODE";
+let categories=[];
+let adminSettings={};
+
+async function loadData(){
+ try{
+  const status=await fetch('/api/status').then(r=>r.json());
+  document.getElementById('backend').innerHTML=
+  status.backend==='ONLINE'
+  ?'<span class="status">ONLINE ✓</span>':'OFFLINE';
+
+  document.getElementById('whatsapp').innerHTML=
+  status.whatsapp==='CONNECTED'
+  ?'<span class="status">CONNECTED</span>'
+  :'<span class="off">NOT CONNECTED</span>';
+
+  const data=await fetch('/api/commands').then(r=>r.json());
+  if(!data.success)throw new Error('API error');
+
+  categories=data.categories||[];
+  adminSettings=data.autoAdmin||{};
+  showCommands();
+
+  document.getElementById('admin').textContent=
+  'Auto Admin: '+(adminSettings.enabled?'Enabled':'Disabled');
+
+ }catch(error){
+  document.getElementById('backend').textContent='ERROR';
+  document.getElementById('commands').textContent='API unavailable';
+  document.getElementById('admin').textContent='Unavailable';
+ }
 }
+
+function showCommands(){
+ const q=document.getElementById('search').value.toLowerCase();
+ const area=document.getElementById('commands');
+ area.innerHTML='';
+
+ categories.forEach(cat=>{
+  const matches=(cat.commands||[]).filter(c=>
+   c.toLowerCase().includes(q)
+  );
+  if(!matches.length)return;
+
+  const section=document.createElement('section');
+  const heading=document.createElement('h2');
+  heading.textContent=cat.name;
+  section.appendChild(heading);
+
+  matches.forEach(c=>{
+   const item=document.createElement('span');
+   item.className='command';
+   item.textContent='.'+c;
+   section.appendChild(item);
+  });
+
+  area.appendChild(section);
+ });
+}
+
+loadData();
 </script>
 </body>
 </html>
